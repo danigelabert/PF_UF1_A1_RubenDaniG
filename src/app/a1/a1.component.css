@@ -48,3 +48,15 @@ body {
 .play-button:hover {
   background-color: #0056b3;
 }
+
+#video-container {
+  text-align: center; /* Centra el contenido del video */
+  margin-top: 20px; /* Agrega un espacio superior para separar la lista de películas y el video */
+}
+
+#video-player {
+  width: 80%; /* Ancho del video ajustado al 80% del contenedor */
+  max-width: 100%; /* Establece un ancho máximo igual al ancho del contenedor */
+  height: auto; /* Ajusta la altura automáticamente según el ancho */
+}
+
