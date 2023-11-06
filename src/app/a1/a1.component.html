@@ -12,39 +12,28 @@
   <ul class="movie-list">
     <li class="movie-item">
       Fast & Furious X
-      <button class="play-button" onclick="playVideo('fastandfurious.mp4')">Reproducir</button>
+      <button class="play-button" (click)="playVideo('fastandfurious.mp4')">Reproducir</button>
     </li>
     <li class="movie-item">
       Barbie
-      <button class="play-button" onclick="playVideo('barbie.mp4')">Reproducir</button>
+      <button class="play-button" (click)="playVideo('barbie.mp4')">Reproducir</button>
     </li>
     <li class="movie-item">
       Los Minions
-      <button class="play-button" onclick="playVideo('minions.mp4')">Reproducir</button>
+      <button class="play-button" (click)="playVideo('minions.mp4')">Reproducir</button>
     </li>
     <li class="movie-item">
       Piratas del Caribe
-      <button class="play-button" onclick="playVideo('pirates.mp4')">Reproducir</button>
+      <button class="play-button" (click)="playVideo('pirates.mp4')">Reproducir</button>
     </li>
   </ul>
 </div>
-<div id="video-container" class="video-container" style="display: none;">
-  <video controls width="640" height="360" id="video-player" autoplay>
-    <source id="video-source" src="" type="video/mp4">
+
+<div id="video-container" class="video-container" *ngIf="videoContainerVisible">
+  <video controls width="640" height="360">
+    <source [src]="videoSource" type="video/mp4">
     Tu navegador no soporta la reproducción de videos.
   </video>
 </div>
-
-<script>
-  function playVideo(videoSource) {
-    const videoContainer = document.getElementById('video-container');
-    const videoPlayer = document.getElementById('video-player');
-    const videoSourceElement = document.getElementById('video-source');
-
-    videoSourceElement.src = videoSource;
-    videoPlayer.load();
-    videoContainer.style.display = 'block';
-  }
-</script>
 </body>
 </html>

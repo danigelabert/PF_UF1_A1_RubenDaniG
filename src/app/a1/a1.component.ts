@@ -6,10 +6,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./a1.component.css']
 })
 export class A1Component {
-  showVideo: boolean = false;
+  videoContainerVisible = false;
+  videoSource = '';
 
-  playVideo() {
-    this.showVideo = true;
+  playVideo(videoSource: string) {
+    this.videoSource = videoSource;
+    this.videoContainerVisible = true;
   }
 }
 
