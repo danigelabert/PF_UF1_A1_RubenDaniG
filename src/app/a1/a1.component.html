@@ -37,17 +37,13 @@
 </div>
 
 
-<div>
-  <h1>Angular-Node.js Socket.IO Example</h1>
-
-  <button (click)="onClickButton()">Incrementar Contador</button>
-
   <div *ngIf="videoContainerVisible">
     <h2>Video Container</h2>
     <!-- Aquí puedes mostrar el video o cualquier otro contenido relacionado con el video -->
     <p>Video Source: {{ videoSource }}</p>
   </div>
-</div>
+
+<p>Contador recibido: {{ this.counter }}</p>
 
 
 </body>
