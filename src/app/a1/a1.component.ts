@@ -7,10 +7,10 @@ import * as io from 'socket.io-client';
   styleUrls: ['./a1.component.css']
 })
 export class A1Component implements OnInit {
-  videoContainerVisible = false;
   videoSource = '';
   socket: any;
   counter: any;
+  reproducir: boolean = false;
 
   ngOnInit(): void {
     // Reemplaza 'http://localhost:3000' con la URL de tu servidor Node.js
@@ -29,16 +29,19 @@ export class A1Component implements OnInit {
       this.counter = counter;
     });
 
+    this.socket.on('reproduirVideo', (reproduir: boolean)=>{
+      this.reproducir=reproduir
+    })
+
     this.socket.on('disconnect', () => {
       console.log('Cliente desconectado');
     });
   }
 
   playVideo(videoSource: string) {
-    this.videoSource = videoSource;
-    this.videoContainerVisible = true;
     // Emite 'sendPIN' al servidor
     this.socket.emit('sendPIN');
+    this.videoSource = videoSource
   }
 
   onClickButton() {

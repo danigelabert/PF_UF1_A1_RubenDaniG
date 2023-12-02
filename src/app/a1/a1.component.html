@@ -29,7 +29,7 @@
   </ul>
 </div>
 
-<div id="video-container" class="video-container" *ngIf="videoContainerVisible">
+<div id="video-container" class="video-container" *ngIf="reproducir">
   <video controls width="640" height="360">
     <source [src]="videoSource" type="video/mp4">
     Tu navegador no soporta la reproducción de videos.
@@ -37,7 +37,7 @@
 </div>
 
 
-  <div *ngIf="videoContainerVisible">
+  <div *ngIf="reproducir">
     <h2>Video Container</h2>
     <!-- Aquí puedes mostrar el video o cualquier otro contenido relacionado con el video -->
     <p>Video Source: {{ videoSource }}</p>
