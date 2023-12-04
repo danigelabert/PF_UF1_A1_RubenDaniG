@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import * as io from 'socket.io-client';
 
 @Component({
@@ -7,46 +8,62 @@ import * as io from 'socket.io-client';
   styleUrls: ['./a1.component.css']
 })
 export class A1Component implements OnInit {
-  videoSource = '';
+  videoSource: SafeUrl = '';
   socket: any;
   counter: any;
-  reproducir: boolean = false;
+  reproduciendo: boolean = false;
+  idButton: string = ''
+  demanarCodi: boolean = false
+
+  constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit(): void {
-    // Reemplaza 'http://localhost:3000' con la URL de tu servidor Node.js
     this.socket = io.connect('http://localhost:3000');
     this.setupSocket();
   }
 
   setupSocket() {
     this.socket.on('connect', () => {
-      console.log('Conectado al servidor');
+      console.log('Conectant al servidor');
     });
 
     this.socket.on('counter', (counter: number) => {
       console.log('Recibido contador del servidor:', counter);
-      // Actualiza la propiedad counter con el valor recibido
       this.counter = counter;
     });
 
-    this.socket.on('reproduirVideo', (reproduir: boolean)=>{
-      this.reproducir=reproduir
-    })
+    this.socket.on('reproduirVideo', (reproduir: boolean) => {
+      this.reproduciendo = reproduir;
+      if (this.reproduciendo) {
+        console.log('Iniciar reproducción del video');
+        this.demanarCodi = false
+
+        if (this.idButton=="ibaiButton")
+        this.videoSource = this.sanitizer.bypassSecurityTrustUrl('http://localhost:3000/videos/ibai');
+        if (this.idButton=="illoJuanButton")
+          this.videoSource = this.sanitizer.bypassSecurityTrustUrl('http://localhost:3000/videos/illo');
+        if (this.idButton=="auronButton")
+          this.videoSource = this.sanitizer.bypassSecurityTrustUrl('http://localhost:3000/videos/auron');
+      }
+    });
 
     this.socket.on('disconnect', () => {
       console.log('Cliente desconectado');
     });
   }
 
-  playVideo(videoSource: string) {
-    // Emite 'sendPIN' al servidor
+  playVideo(id: String) {
     this.socket.emit('sendPIN');
-    this.videoSource = videoSource
-  }
-
-  onClickButton() {
-    // Lógica para enviar un evento al servidor cuando se hace clic en el botón
-    // Puedes quitar esto si no necesitas enviar 'sendPIN' desde aquí
-    this.socket.emit('sendPIN');
+    // @ts-ignore
+    this.idButton = id
+    this.reproduciendo=false
+    this.demanarCodi = true
+    if (id == "ibai"){
+      this.videoSource = this.sanitizer.bypassSecurityTrustUrl('http://localhost:3000/videos/ibai');
+    } else if(id=="auron"){
+      this.videoSource = this.sanitizer.bypassSecurityTrustUrl('http://localhost:3000/videos/auron');
+    }else if(id=="illoJuan"){
+      this.videoSource = this.sanitizer.bypassSecurityTrustUrl('http://localhost:3000/videos/illoJuan');
+    }
   }
 }

@@ -8,42 +8,31 @@
 </head>
 <body>
 <div class="movie-container">
-  <h2 class="movie-title">PELÍCULAS</h2>
+  <h2 class="movie-title">ESCULL EL TEU STREAMER PREFERIT</h2>
   <ul class="movie-list">
     <li class="movie-item">
-      Fast & Furious X
-      <button class="play-button" (click)="playVideo('fastandfurious.mp4')">Reproducir</button>
+      Illo Juan
+      <button class="play-button" (click)="playVideo('illoJuanButton')">Reproduir</button>
     </li>
     <li class="movie-item">
-      Barbie
-      <button class="play-button" (click)="playVideo('barbie.mp4')">Reproducir</button>
+      Ibai
+      <button class="play-button" (click)="playVideo('ibaiButton')">Reproduir</button>
     </li>
     <li class="movie-item">
-      Los Minions
-      <button class="play-button" (click)="playVideo('minions.mp4')">Reproducir</button>
-    </li>
-    <li class="movie-item">
-      Piratas del Caribe
-      <button class="play-button" (click)="playVideo('pirates.mp4')">Reproducir</button>
+      AuronPlay
+      <button class="play-button" (click)="playVideo('auronButton')">Reproduir</button>
     </li>
   </ul>
 </div>
 
-<div id="video-container" class="video-container" *ngIf="reproducir">
+<div id="video-container" class="video-container" *ngIf="reproduciendo">
   <video controls width="640" height="360">
     <source [src]="videoSource" type="video/mp4">
-    Tu navegador no soporta la reproducción de videos.
+    El teu navegador no suporta la reproducció de videos.
   </video>
 </div>
 
-
-  <div *ngIf="reproducir">
-    <h2>Video Container</h2>
-    <!-- Aquí puedes mostrar el video o cualquier otro contenido relacionado con el video -->
-    <p>Video Source: {{ videoSource }}</p>
-  </div>
-
-<p>Contador recibido: {{ this.counter }}</p>
+<p *ngIf="demanarCodi">Introdueix aquest codi a l'App: {{ this.counter }}</p>
 
 
 </body>
