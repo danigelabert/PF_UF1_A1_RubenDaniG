@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import * as io from 'socket.io-client';
+import {AuthServiceService} from "../auth-service.service";
 
 @Component({
   selector: 'app-a1',
@@ -15,11 +16,12 @@ export class A1Component implements OnInit {
   idButton: string = ''
   demanarCodi: boolean = false
 
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(private sanitizer: DomSanitizer, public userService: AuthServiceService) {}
 
   ngOnInit(): void {
     this.socket = io.connect('http://localhost:3000');
     this.setupSocket();
+    this.getUserLogged();
   }
 
   setupSocket() {
@@ -65,5 +67,11 @@ export class A1Component implements OnInit {
     }else if(id=="illoJuan"){
       this.videoSource = this.sanitizer.bypassSecurityTrustUrl('http://localhost:3000/videos/illoJuan');
     }
+  }
+
+  getUserLogged() {
+    this.userService.getUser().subscribe((user) => {
+      console.log(user);
+    });
   }
 }

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthServiceService } from '../auth-service.service';
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-login',
@@ -8,16 +9,23 @@ import { AuthServiceService } from '../auth-service.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  username: string = '';
-  password: string = '';
+  // email: string='dani';
+  // password: string='dani';
 
-  constructor(private authService: AuthServiceService, private router: Router) { }
+  constructor(public usuarioService: AuthServiceService, public router: Router,private toastr: ToastrService ) {}
 
-  onSubmit(): void {
-    if (this.authService.login(this.username, this.password)) {
-      this.router.navigate(['/a1']);
-    } else {
-      console.log('Credenciales incorrectas');
-    }
+  buscarUsuario(username: string, password: string): void {
+    this.usuarioService.buscarUsuario(username, password)
+      .subscribe(
+        usuario => {
+          console.log('Usuario encontrado:', usuario);
+          this.router.navigate(['/a1'])
+
+        },
+        error => {
+          console.error('Error al buscar usuario:', error);
+          this.toastr.error('Credenciales inválidas', 'Error de inicio de sesión');
+        }
+      );
   }
 }
