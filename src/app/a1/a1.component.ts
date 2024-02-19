@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import * as io from 'socket.io-client';
-import {AuthServiceService} from "../auth-service.service";
+import { AuthServiceService } from "../auth-service.service";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-a1',
@@ -16,7 +17,7 @@ export class A1Component implements OnInit {
   idButton: string = ''
   demanarCodi: boolean = false
 
-  constructor(private sanitizer: DomSanitizer, public userService: AuthServiceService) {}
+  constructor(private sanitizer: DomSanitizer, public userService: AuthServiceService, private http: HttpClient) {}
 
   ngOnInit(): void {
     this.socket = io.connect('http://localhost:3000');
@@ -40,12 +41,36 @@ export class A1Component implements OnInit {
         console.log('Iniciar reproducción del video');
         this.demanarCodi = false
 
-        if (this.idButton=="ibaiButton")
-        this.videoSource = this.sanitizer.bypassSecurityTrustUrl('http://localhost:3000/videos/ibai');
-        if (this.idButton=="illoJuanButton")
-          this.videoSource = this.sanitizer.bypassSecurityTrustUrl('http://localhost:3000/videos/illo');
-        if (this.idButton=="auronButton")
-          this.videoSource = this.sanitizer.bypassSecurityTrustUrl('http://localhost:3000/videos/auron');
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders().set('Authorization', token || '');
+
+        let videoUrl: string;
+
+        switch (this.idButton) {
+          case 'ibaiButton':
+            videoUrl = 'http://localhost:3000/videos/ibai';
+            break;
+          case 'illoJuanButton':
+            videoUrl = 'http://localhost:3000/videos/illo';
+            break;
+          case 'auronButton':
+            videoUrl = 'http://localhost:3000/videos/auron';
+            break;
+          default:
+            console.error('ID de botón no reconocido');
+            return;
+        }
+
+        this.http.get(videoUrl, { headers, responseType: 'blob' }).subscribe(
+          response => {
+            const videoBlob = new Blob([response], { type: 'video/mp4' });
+            this.videoSource = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(videoBlob));
+          },
+          error => {
+            console.error('Error al obtener el video:', error);
+            // Manejar errores al obtener el video
+          }
+        );
       }
     });
 
@@ -54,19 +79,11 @@ export class A1Component implements OnInit {
     });
   }
 
-  playVideo(id: String) {
+  playVideo(id: string) {
     this.socket.emit('sendPIN');
-    // @ts-ignore
-    this.idButton = id
-    this.reproduciendo=false
-    this.demanarCodi = true
-    if (id == "ibai"){
-      this.videoSource = this.sanitizer.bypassSecurityTrustUrl('http://localhost:3000/videos/ibai');
-    } else if(id=="auron"){
-      this.videoSource = this.sanitizer.bypassSecurityTrustUrl('http://localhost:3000/videos/auron');
-    }else if(id=="illoJuan"){
-      this.videoSource = this.sanitizer.bypassSecurityTrustUrl('http://localhost:3000/videos/illoJuan');
-    }
+    this.idButton = id;
+    this.reproduciendo = false;
+    this.demanarCodi = true;
   }
 
   getUserLogged() {
